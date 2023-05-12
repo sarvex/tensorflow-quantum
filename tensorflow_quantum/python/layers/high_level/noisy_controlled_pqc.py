@@ -176,7 +176,7 @@ class NoisyControlledPQC(tf.keras.layers.Layer):
 
         self._circuit = util.convert_to_tensor([model_circuit])
 
-        if len(self._symbols_list) == 0:
+        if not self._symbols_list:
             raise ValueError("model_circuit has no sympy.Symbols. Please "
                              "provide a circuit that contains symbols so "
                              "that their values can be trained.")
@@ -186,14 +186,12 @@ class NoisyControlledPQC(tf.keras.layers.Layer):
             operators = [operators]
 
         if not isinstance(operators, (list, np.ndarray, tuple)):
-            raise TypeError("operators must be a cirq.PauliSum or "
-                            "cirq.PauliString, or a list, tuple, "
-                            "or np.array containing them. "
-                            "Got {}.".format(type(operators)))
-        if not all([
-                isinstance(op, (cirq.PauliString, cirq.PauliSum))
-                for op in operators
-        ]):
+            raise TypeError(
+                f"operators must be a cirq.PauliSum or cirq.PauliString, or a list, tuple, or np.array containing them. Got {type(operators)}."
+            )
+        if not all(
+            isinstance(op, (cirq.PauliString, cirq.PauliSum)) for op in operators
+        ):
             raise TypeError("Each element in operators to measure "
                             "must be a cirq.PauliString"
                             " or cirq.PauliSum")
@@ -225,8 +223,9 @@ class NoisyControlledPQC(tf.keras.layers.Layer):
                              " or sampled_based=True for measurement based "
                              "noisy estimates.")
         if not isinstance(sample_based, bool):
-            raise TypeError("sample_based must be either True or False."
-                            " received: {}".format(type(sample_based)))
+            raise TypeError(
+                f"sample_based must be either True or False. received: {type(sample_based)}"
+            )
 
         if not sample_based:
             self._executor = differentiator.generate_differentiable_op(

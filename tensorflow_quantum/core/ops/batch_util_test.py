@@ -53,8 +53,12 @@ def _expectation_helper(sim, circuit, params, op):
             op.expectation_from_state_vector(
                 state,
                 dict(
-                    zip(sorted(circuit.all_qubits()),
-                        (j for j in range(len(circuit.all_qubits())))))).real
+                    zip(
+                        sorted(circuit.all_qubits()),
+                        iter(range(len(circuit.all_qubits()))),
+                    )
+                ),
+            ).real
         ]
     if isinstance(sim, cirq.DensityMatrixSimulator):
         state = sim.simulate(circuit, params).final_density_matrix
@@ -63,10 +67,14 @@ def _expectation_helper(sim, circuit, params, op):
                 x._expectation_from_density_matrix_no_validation(
                     state,
                     dict(
-                        zip(sorted(circuit.all_qubits()), (
-                            j
-                            for j in range(len(circuit.all_qubits()))))))
-                for x in op)
+                        zip(
+                            sorted(circuit.all_qubits()),
+                            iter(range(len(circuit.all_qubits()))),
+                        )
+                    ),
+                )
+                for x in op
+            )
         ]
 
     return NotImplemented
@@ -191,13 +199,14 @@ class BatchUtilTest(tf.test.TestCase, parameterized.TestCase):
         results = batch_util.batch_sample(circuit_batch, resolver_batch,
                                           n_samples, sim)
 
-        tfq_histograms = []
-        for r in results:
-            tfq_histograms.append(
-                np.histogram(r.dot(1 << np.arange(r.shape[-1] - 1, -1, -1)),
-                             range=(0, 2**N_QUBITS),
-                             bins=2**N_QUBITS)[0])
-
+        tfq_histograms = [
+            np.histogram(
+                r.dot(1 << np.arange(r.shape[-1] - 1, -1, -1)),
+                range=(0, 2**N_QUBITS),
+                bins=2**N_QUBITS,
+            )[0]
+            for r in results
+        ]
         cirq_histograms = []
         for circuit, resolver in zip(circuit_batch, resolver_batch):
             state = sim.simulate(circuit, resolver)

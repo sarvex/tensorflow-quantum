@@ -238,7 +238,7 @@ class ResolveParametersOpTest(tf.test.TestCase, parameterized.TestCase):
         circuit = cirq.Circuit()
         symbols = []
         for n, q in enumerate(qubits):
-            new_bit = sympy.Symbol("bit_{}".format(n))
+            new_bit = sympy.Symbol(f"bit_{n}")
             circuit += cirq.X(q)**new_bit
             symbols.append(new_bit)
         symbol_names = [str(s) for s in symbols]
@@ -247,9 +247,7 @@ class ResolveParametersOpTest(tf.test.TestCase, parameterized.TestCase):
         circuit_list = []
         resolver_list = []
         for bitstring in bitstring_list:
-            resolve_dict = {}
-            for s, b in zip(symbols, bitstring):
-                resolve_dict[s] = b
+            resolve_dict = dict(zip(symbols, bitstring))
             resolver_list.append(cirq.ParamResolver(resolve_dict))
             circuit_list.append(circuit)
 
@@ -258,11 +256,10 @@ class ResolveParametersOpTest(tf.test.TestCase, parameterized.TestCase):
                 util.convert_to_tensor(circuit_list), symbol_names,
                 np.asarray(bitstring_list)))
 
-        expected_resolved_circuits = []
-        for circuit, resolver in zip(circuit_list, resolver_list):
-            expected_resolved_circuits.append(
-                cirq.resolve_parameters(circuit, resolver))
-
+        expected_resolved_circuits = [
+            cirq.resolve_parameters(circuit, resolver)
+            for circuit, resolver in zip(circuit_list, resolver_list)
+        ]
         for exp_c, test_c in zip(expected_resolved_circuits,
                                  test_resolved_circuits):
             self.assertAllEqual(exp_c, test_c)
@@ -283,7 +280,7 @@ class ResolveParametersOpTest(tf.test.TestCase, parameterized.TestCase):
         batch_size = 15
         n_moments = 15
         circuit_batch, resolver_batch = \
-            util.random_symbol_circuit_resolver_batch(
+                util.random_symbol_circuit_resolver_batch(
                 qubits, symbol_names, batch_size,
                 n_moments=n_moments,
                 include_channels=True,
@@ -307,10 +304,10 @@ class ResolveParametersOpTest(tf.test.TestCase, parameterized.TestCase):
             tfq_utility_ops.resolve_parameters(
                 util.convert_to_tensor(circuit_batch), symbol_names_partial,
                 symbol_values_array_partial))
-        expected_resolved_circuits = []
-        for circuit, resolver in zip(circuit_batch, resolver_batch_partial):
-            expected_resolved_circuits.append(
-                cirq.resolve_parameters(circuit, resolver))
+        expected_resolved_circuits = [
+            cirq.resolve_parameters(circuit, resolver)
+            for circuit, resolver in zip(circuit_batch, resolver_batch_partial)
+        ]
         # TODO(zaqqwerty): Find a way to eliminate parsing.
         for test_c, exp_c in zip(test_resolved_circuits,
                                  expected_resolved_circuits):

@@ -74,20 +74,22 @@ class LinearCombination(differentiator.Differentiator):
                 perturbation values.
         """
         if not isinstance(weights, (np.ndarray, list, tuple)):
-            raise TypeError("weights must be a numpy array, list or tuple."
-                            "Got {}".format(type(weights)))
-        if not all([isinstance(weight, numbers.Real) for weight in weights]):
+            raise TypeError(
+                f"weights must be a numpy array, list or tuple.Got {type(weights)}"
+            )
+        if not all(isinstance(weight, numbers.Real) for weight in weights):
             raise TypeError("Each weight in weights must be a real number.")
         if not isinstance(perturbations, (np.ndarray, list, tuple)):
-            raise TypeError("perturbations must be a numpy array,"
-                            " list or tuple. Got {}".format(type(weights)))
-        if not all([
-                isinstance(perturbation, numbers.Real)
-                for perturbation in perturbations
-        ]):
+            raise TypeError(
+                f"perturbations must be a numpy array, list or tuple. Got {type(weights)}"
+            )
+        if not all(
+            isinstance(perturbation, numbers.Real)
+            for perturbation in perturbations
+        ):
             raise TypeError("Each perturbation in perturbations must be a"
                             " real number.")
-        if not len(weights) == len(perturbations):
+        if len(weights) != len(perturbations):
             raise ValueError("weights and perturbations must have the same "
                              "length.")
         if len(perturbations) < 2:
@@ -100,7 +102,7 @@ class LinearCombination(differentiator.Differentiator):
         self.perturbations = tf.constant(perturbations, dtype=tf.float32)
 
         # Uniqueness in particular ensures there at most one zero perturbation.
-        if not len(list(set(perturbations))) == len(perturbations):
+        if len(list(set(perturbations))) != len(perturbations):
             raise ValueError("All values in perturbations must be unique.")
         mask = tf.not_equal(self.perturbations,
                             tf.zeros_like(self.perturbations))

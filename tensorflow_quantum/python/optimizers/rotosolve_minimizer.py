@@ -40,9 +40,7 @@ def prefer_static_value(x):
         Numpy array (if static value is obtainable), else `tf.Tensor`.
     """
     static_x = tf.get_static_value(x)
-    if static_x is not None:
-        return static_x
-    return x
+    return static_x if static_x is not None else x
 
 
 RotosolveOptimizerResults = collections.namedtuple(

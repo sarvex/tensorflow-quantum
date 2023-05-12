@@ -80,8 +80,7 @@ def padded_to_ragged(masked_state):
     # All valid values will be < 1, anything > 1 is a padding entry.
     abs_state = tf.abs(tf.cast(masked_state, tf.float32))
     mask = tf.math.less(abs_state, tf.constant(1.1, dtype=abs_state.dtype))
-    state_ragged = tf.ragged.boolean_mask(masked_state, mask)
-    return state_ragged
+    return tf.ragged.boolean_mask(masked_state, mask)
 
 
 @tf.function

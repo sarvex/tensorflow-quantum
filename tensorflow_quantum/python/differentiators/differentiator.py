@@ -123,7 +123,7 @@ class Differentiator(metaclass=abc.ABCMeta):
                 'programs', 'symbol_names', 'symbol_values', 'pauli_sums'
             ]
             for key in expected_signature:
-                if not any(key in s for s in signature):
+                if all(key not in s for s in signature):
                     raise ValueError('unexpected signature for analytic_op. '
                                      'Given arg: {}.'.format(str(key)) + ''
                                      'The signature should contain: {}.'.format(
@@ -144,7 +144,7 @@ class Differentiator(metaclass=abc.ABCMeta):
                 'num_samples'
             ]
             for key in expected_signature:
-                if not any(key in s for s in signature):
+                if all(key not in s for s in signature):
                     raise ValueError('unexpected signature for sampled_op. '
                                      'Given arg: {}.'.format(str(key)) + ''
                                      'The signature should contain: {}.'.format(

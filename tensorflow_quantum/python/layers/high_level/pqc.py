@@ -180,15 +180,16 @@ class PQC(tf.keras.layers.Layer):
 
         # Ingest model_circuit.
         if not isinstance(model_circuit, cirq.Circuit):
-            raise TypeError("model_circuit must be a cirq.Circuit object."
-                            " Given: {}".format(model_circuit))
+            raise TypeError(
+                f"model_circuit must be a cirq.Circuit object. Given: {model_circuit}"
+            )
 
         self._symbols_list = list(
             sorted(util.get_circuit_symbols(model_circuit)))
         self._symbols = tf.constant([str(x) for x in self._symbols_list])
 
         self._model_circuit = util.convert_to_tensor([model_circuit])
-        if len(self._symbols_list) == 0:
+        if not self._symbols_list:
             raise ValueError("model_circuit has no sympy.Symbols. Please "
                              "provide a circuit that contains symbols so "
                              "that their values can be trained.")
@@ -197,14 +198,12 @@ class PQC(tf.keras.layers.Layer):
         if isinstance(operators, (cirq.PauliString, cirq.PauliSum)):
             operators = [operators]
         if not isinstance(operators, (list, np.ndarray, tuple)):
-            raise TypeError("operators must be a cirq.PauliSum or "
-                            "cirq.PauliString, or a list, tuple, "
-                            "or np.array containing them. "
-                            "Got {}.".format(type(operators)))
-        if not all([
-                isinstance(op, (cirq.PauliString, cirq.PauliSum))
-                for op in operators
-        ]):
+            raise TypeError(
+                f"operators must be a cirq.PauliSum or cirq.PauliString, or a list, tuple, or np.array containing them. Got {type(operators)}."
+            )
+        if not all(
+            isinstance(op, (cirq.PauliString, cirq.PauliSum)) for op in operators
+        ):
             raise TypeError("Each element in operators to measure "
                             "must be a cirq.PauliString"
                             " or cirq.PauliSum")
@@ -300,19 +299,16 @@ class PQC(tf.keras.layers.Layer):
         tiled_up_parameters = tf.tile([self.parameters], [circuit_batch_dim, 1])
         tiled_up_operators = tf.tile(self._operators, [circuit_batch_dim, 1])
 
-        # this is disabled to make autograph compilation easier.
-        # pylint: disable=no-else-return
         if self._analytic:
             return self._executor(model_appended,
                                   symbol_names=self._symbols,
                                   symbol_values=tiled_up_parameters,
                                   operators=tiled_up_operators)
-        else:
-            tiled_up_repetitions = tf.tile(self._repetitions,
-                                           [circuit_batch_dim, 1])
-            return self._executor(model_appended,
-                                  symbol_names=self._symbols,
-                                  symbol_values=tiled_up_parameters,
-                                  operators=tiled_up_operators,
-                                  repetitions=tiled_up_repetitions)
+        tiled_up_repetitions = tf.tile(self._repetitions,
+                                       [circuit_batch_dim, 1])
+        return self._executor(model_appended,
+                              symbol_names=self._symbols,
+                              symbol_values=tiled_up_parameters,
+                              operators=tiled_up_operators,
+                              repetitions=tiled_up_repetitions)
         # pylint: enable=no-else-return

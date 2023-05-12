@@ -79,8 +79,7 @@ class RandomCliffordCircuitTest(parameterized.TestCase, tf.test.TestCase):
         op_density = 0.9
         circuit = cirq.Circuit(
             *random_clifford_circuit(qubits, n_moments, op_density))
-        cliffords = set(
-            [cirq.X, cirq.Y, cirq.Z, cirq.H, cirq.CZ, cirq.CNOT, cirq.SWAP])
+        cliffords = {cirq.X, cirq.Y, cirq.Z, cirq.H, cirq.CZ, cirq.CNOT, cirq.SWAP}
         non_id_gates = [op.gate for op in circuit.all_operations()]
         self.assertTrue(set(non_id_gates).issubset(cliffords))
 

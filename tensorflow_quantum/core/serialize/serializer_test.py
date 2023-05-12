@@ -145,243 +145,626 @@ def _get_circuit_proto_pairs(qubit_type='grid'):
         q0_str = '0'
         q1_str = '1'
 
-    pairs = [
+    return [
         # HPOW and aliases.
-        (cirq.Circuit(cirq.HPowGate(exponent=0.3)(q0)),
-         _build_op_proto("HP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.HPowGate(exponent=sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("HP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.HPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("HP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.H(q0)),
-         _build_op_proto("HP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.HPowGate(exponent=0.3)(q0)),
+            _build_op_proto(
+                "HP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.HPowGate(exponent=sympy.Symbol('alpha'))(q0)),
+            _build_op_proto(
+                "HP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.HPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)
+            ),
+            _build_op_proto(
+                "HP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.H(q0)),
+            _build_op_proto(
+                "HP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
         # XPOW and aliases.
-        (cirq.Circuit(cirq.XPowGate(exponent=0.3)(q0)),
-         _build_op_proto("XP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.XPowGate(exponent=sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("XP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.XPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("XP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.X(q0)),
-         _build_op_proto("XP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.XPowGate(exponent=0.3)(q0)),
+            _build_op_proto(
+                "XP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.XPowGate(exponent=sympy.Symbol('alpha'))(q0)),
+            _build_op_proto(
+                "XP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.XPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)
+            ),
+            _build_op_proto(
+                "XP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.X(q0)),
+            _build_op_proto(
+                "XP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
         # YPOW and aliases
-        (cirq.Circuit(cirq.YPowGate(exponent=0.3)(q0)),
-         _build_op_proto("YP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.YPowGate(exponent=sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("YP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.YPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("YP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.Y(q0)),
-         _build_op_proto("YP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.YPowGate(exponent=0.3)(q0)),
+            _build_op_proto(
+                "YP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.YPowGate(exponent=sympy.Symbol('alpha'))(q0)),
+            _build_op_proto(
+                "YP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.YPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)
+            ),
+            _build_op_proto(
+                "YP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.Y(q0)),
+            _build_op_proto(
+                "YP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
         # ZPOW and aliases.
-        (cirq.Circuit(cirq.ZPowGate(exponent=0.3)(q0)),
-         _build_op_proto("ZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.ZPowGate(exponent=sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("ZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.ZPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)),
-         _build_op_proto("ZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str])),
-        (cirq.Circuit(cirq.Z(q0)),
-         _build_op_proto("ZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.ZPowGate(exponent=0.3)(q0)),
+            _build_op_proto(
+                "ZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.ZPowGate(exponent=sympy.Symbol('alpha'))(q0)),
+            _build_op_proto(
+                "ZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.ZPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0)
+            ),
+            _build_op_proto(
+                "ZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.Z(q0)),
+            _build_op_proto(
+                "ZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
         # XXPow and aliases
-        (cirq.Circuit(cirq.XXPowGate(exponent=0.3)(q0, q1)),
-         _build_op_proto("XXP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.XXPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("XXP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.XXPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("XXP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.XX(q0, q1)),
-         _build_op_proto("XXP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str, q1_str])),
-
+        (
+            cirq.Circuit(cirq.XXPowGate(exponent=0.3)(q0, q1)),
+            _build_op_proto(
+                "XXP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.XXPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "XXP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.XXPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "XXP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.XX(q0, q1)),
+            _build_op_proto(
+                "XXP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
         # YYPow and aliases
-        (cirq.Circuit(cirq.YYPowGate(exponent=0.3)(q0, q1)),
-         _build_op_proto("YYP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.YYPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("YYP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.YYPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("YYP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.YY(q0, q1)),
-         _build_op_proto("YYP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str, q1_str])),
-
+        (
+            cirq.Circuit(cirq.YYPowGate(exponent=0.3)(q0, q1)),
+            _build_op_proto(
+                "YYP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.YYPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "YYP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.YYPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "YYP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.YY(q0, q1)),
+            _build_op_proto(
+                "YYP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
         # ZZPow and aliases
-        (cirq.Circuit(cirq.ZZPowGate(exponent=0.3)(q0, q1)),
-         _build_op_proto("ZZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.ZZPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("ZZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.ZZPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("ZZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.ZZ(q0, q1)),
-         _build_op_proto("ZZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str, q1_str])),
-
+        (
+            cirq.Circuit(cirq.ZZPowGate(exponent=0.3)(q0, q1)),
+            _build_op_proto(
+                "ZZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.ZZPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "ZZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.ZZPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "ZZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.ZZ(q0, q1)),
+            _build_op_proto(
+                "ZZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
         # CZPow and aliases
-        (cirq.Circuit(cirq.CZPowGate(exponent=0.3)(q0, q1)),
-         _build_op_proto("CZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.CZPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("CZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.CZPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("CZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.CZ(q0, q1)),
-         _build_op_proto("CZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str, q1_str])),
-
+        (
+            cirq.Circuit(cirq.CZPowGate(exponent=0.3)(q0, q1)),
+            _build_op_proto(
+                "CZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.CZPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "CZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.CZPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "CZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.CZ(q0, q1)),
+            _build_op_proto(
+                "CZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
         # CNOTPow and aliases
-        (cirq.Circuit(cirq.CNotPowGate(exponent=0.3)(q0, q1)),
-         _build_op_proto("CNP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.CNotPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("CNP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.CNotPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("CNP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.CNOT(q0, q1)),
-         _build_op_proto("CNP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str, q1_str])),
-
+        (
+            cirq.Circuit(cirq.CNotPowGate(exponent=0.3)(q0, q1)),
+            _build_op_proto(
+                "CNP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.CNotPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "CNP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.CNotPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "CNP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.CNOT(q0, q1)),
+            _build_op_proto(
+                "CNP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
         # SWAPPow and aliases
-        (cirq.Circuit(cirq.SwapPowGate(exponent=0.3)(q0, q1)),
-         _build_op_proto("SP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.SwapPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("SP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.SwapPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("SP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.SWAP(q0, q1)),
-         _build_op_proto("SP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str, q1_str])),
-
+        (
+            cirq.Circuit(cirq.SwapPowGate(exponent=0.3)(q0, q1)),
+            _build_op_proto(
+                "SP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.SwapPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "SP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.SwapPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "SP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.SWAP(q0, q1)),
+            _build_op_proto(
+                "SP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
         # ISWAPPow and aliases
-        (cirq.Circuit(cirq.ISwapPowGate(exponent=0.3)(q0, q1)),
-         _build_op_proto("ISP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [0.3, 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.ISwapPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("ISP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 1.0, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.ISwapPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)),
-         _build_op_proto("ISP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         ['alpha', 3.1, 0.0], [q0_str, q1_str])),
-        (cirq.Circuit(cirq.ISWAP(q0, q1)),
-         _build_op_proto("ISP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, 0.0], [q0_str, q1_str])),
-
+        (
+            cirq.Circuit(cirq.ISwapPowGate(exponent=0.3)(q0, q1)),
+            _build_op_proto(
+                "ISP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [0.3, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.ISwapPowGate(exponent=sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "ISP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.ISwapPowGate(exponent=3.1 * sympy.Symbol('alpha'))(q0, q1)
+            ),
+            _build_op_proto(
+                "ISP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                ['alpha', 3.1, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.ISWAP(q0, q1)),
+            _build_op_proto(
+                "ISP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, 0.0],
+                [q0_str, q1_str],
+            ),
+        ),
         # PhasedXPow and aliases
-        (cirq.Circuit(
-            cirq.PhasedXPowGate(phase_exponent=0.9,
-                                exponent=0.3,
-                                global_shift=0.2)(q0)),
-         _build_op_proto("PXP", [
-             'phase_exponent', 'phase_exponent_scalar', 'exponent',
-             'exponent_scalar', 'global_shift'
-         ], [0.9, 1.0, 0.3, 1.0, 0.2], [q0_str])),
-        (cirq.Circuit(
-            cirq.PhasedXPowGate(phase_exponent=sympy.Symbol('alpha'),
-                                exponent=0.3)(q0)),
-         _build_op_proto("PXP", [
-             'phase_exponent', 'phase_exponent_scalar', 'exponent',
-             'exponent_scalar', 'global_shift'
-         ], ['alpha', 1.0, 0.3, 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(
-            cirq.PhasedXPowGate(phase_exponent=3.1 * sympy.Symbol('alpha'),
-                                exponent=0.3)(q0)),
-         _build_op_proto("PXP", [
-             'phase_exponent', 'phase_exponent_scalar', 'exponent',
-             'exponent_scalar', 'global_shift'
-         ], ['alpha', 3.1, 0.3, 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(
-            cirq.PhasedXPowGate(phase_exponent=0.9,
-                                exponent=sympy.Symbol('beta'))(q0)),
-         _build_op_proto("PXP", [
-             'phase_exponent', 'phase_exponent_scalar', 'exponent',
-             'exponent_scalar', 'global_shift'
-         ], [0.9, 1.0, 'beta', 1.0, 0.0], [q0_str])),
-        (cirq.Circuit(
-            cirq.PhasedXPowGate(phase_exponent=0.9,
-                                exponent=5.1 * sympy.Symbol('beta'))(q0)),
-         _build_op_proto("PXP", [
-             'phase_exponent', 'phase_exponent_scalar', 'exponent',
-             'exponent_scalar', 'global_shift'
-         ], [0.9, 1.0, 'beta', 5.1, 0.0], [q0_str])),
-        (cirq.Circuit(
-            cirq.PhasedXPowGate(phase_exponent=3.1 * sympy.Symbol('alpha'),
-                                exponent=5.1 * sympy.Symbol('beta'))(q0)),
-         _build_op_proto("PXP", [
-             'phase_exponent', 'phase_exponent_scalar', 'exponent',
-             'exponent_scalar', 'global_shift'
-         ], ['alpha', 3.1, 'beta', 5.1, 0.0], [q0_str])),
-
+        (
+            cirq.Circuit(
+                cirq.PhasedXPowGate(
+                    phase_exponent=0.9, exponent=0.3, global_shift=0.2
+                )(q0)
+            ),
+            _build_op_proto(
+                "PXP",
+                [
+                    'phase_exponent',
+                    'phase_exponent_scalar',
+                    'exponent',
+                    'exponent_scalar',
+                    'global_shift',
+                ],
+                [0.9, 1.0, 0.3, 1.0, 0.2],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.PhasedXPowGate(
+                    phase_exponent=sympy.Symbol('alpha'), exponent=0.3
+                )(q0)
+            ),
+            _build_op_proto(
+                "PXP",
+                [
+                    'phase_exponent',
+                    'phase_exponent_scalar',
+                    'exponent',
+                    'exponent_scalar',
+                    'global_shift',
+                ],
+                ['alpha', 1.0, 0.3, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.PhasedXPowGate(
+                    phase_exponent=3.1 * sympy.Symbol('alpha'), exponent=0.3
+                )(q0)
+            ),
+            _build_op_proto(
+                "PXP",
+                [
+                    'phase_exponent',
+                    'phase_exponent_scalar',
+                    'exponent',
+                    'exponent_scalar',
+                    'global_shift',
+                ],
+                ['alpha', 3.1, 0.3, 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.PhasedXPowGate(
+                    phase_exponent=0.9, exponent=sympy.Symbol('beta')
+                )(q0)
+            ),
+            _build_op_proto(
+                "PXP",
+                [
+                    'phase_exponent',
+                    'phase_exponent_scalar',
+                    'exponent',
+                    'exponent_scalar',
+                    'global_shift',
+                ],
+                [0.9, 1.0, 'beta', 1.0, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.PhasedXPowGate(
+                    phase_exponent=0.9, exponent=5.1 * sympy.Symbol('beta')
+                )(q0)
+            ),
+            _build_op_proto(
+                "PXP",
+                [
+                    'phase_exponent',
+                    'phase_exponent_scalar',
+                    'exponent',
+                    'exponent_scalar',
+                    'global_shift',
+                ],
+                [0.9, 1.0, 'beta', 5.1, 0.0],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.PhasedXPowGate(
+                    phase_exponent=3.1 * sympy.Symbol('alpha'),
+                    exponent=5.1 * sympy.Symbol('beta'),
+                )(q0)
+            ),
+            _build_op_proto(
+                "PXP",
+                [
+                    'phase_exponent',
+                    'phase_exponent_scalar',
+                    'exponent',
+                    'exponent_scalar',
+                    'global_shift',
+                ],
+                ['alpha', 3.1, 'beta', 5.1, 0.0],
+                [q0_str],
+            ),
+        ),
         # RX, RY, RZ with symbolization is tested in special cases as the
         # string comparison of the float converted sympy.pi does not happen
         # smoothly. See: test_serialize_deserialize_special_case_one_qubit
-        (cirq.Circuit(cirq.rx(np.pi)(q0)),
-         _build_op_proto("XP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, -0.5], [q0_str])),
-        (cirq.Circuit(cirq.ry(np.pi)(q0)),
-         _build_op_proto("YP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, -0.5], [q0_str])),
-        (cirq.Circuit(cirq.rz(np.pi)(q0)),
-         _build_op_proto("ZP", ['exponent', 'exponent_scalar', 'global_shift'],
-                         [1.0, 1.0, -0.5], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.rx(np.pi)(q0)),
+            _build_op_proto(
+                "XP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, -0.5],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.ry(np.pi)(q0)),
+            _build_op_proto(
+                "YP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, -0.5],
+                [q0_str],
+            ),
+        ),
+        (
+            cirq.Circuit(cirq.rz(np.pi)(q0)),
+            _build_op_proto(
+                "ZP",
+                ['exponent', 'exponent_scalar', 'global_shift'],
+                [1.0, 1.0, -0.5],
+                [q0_str],
+            ),
+        ),
         # Identity
-        (cirq.Circuit(cirq.I(q0)),
-         _build_op_proto("I", ['unused'], [True], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.I(q0)),
+            _build_op_proto("I", ['unused'], [True], [q0_str]),
+        ),
         # FSimGate
-        (cirq.Circuit(cirq.FSimGate(theta=0.1, phi=0.2)(q0, q1)),
-         _build_op_proto("FSIM", ['theta', 'theta_scalar', 'phi', 'phi_scalar'],
-                         [0.1, 1.0, 0.2, 1.0], [q0_str, q1_str])),
-        (cirq.Circuit(
-            cirq.FSimGate(theta=2.1 * sympy.Symbol("alpha"),
-                          phi=1.3 * sympy.Symbol("beta"))(q0, q1)),
-         _build_op_proto("FSIM", ['theta', 'theta_scalar', 'phi', 'phi_scalar'],
-                         ['alpha', 2.1, 'beta', 1.3], [q0_str, q1_str])),
+        (
+            cirq.Circuit(cirq.FSimGate(theta=0.1, phi=0.2)(q0, q1)),
+            _build_op_proto(
+                "FSIM",
+                ['theta', 'theta_scalar', 'phi', 'phi_scalar'],
+                [0.1, 1.0, 0.2, 1.0],
+                [q0_str, q1_str],
+            ),
+        ),
+        (
+            cirq.Circuit(
+                cirq.FSimGate(
+                    theta=2.1 * sympy.Symbol("alpha"),
+                    phi=1.3 * sympy.Symbol("beta"),
+                )(q0, q1)
+            ),
+            _build_op_proto(
+                "FSIM",
+                ['theta', 'theta_scalar', 'phi', 'phi_scalar'],
+                ['alpha', 2.1, 'beta', 1.3],
+                [q0_str, q1_str],
+            ),
+        ),
     ]
-
-    return pairs
 
 
 def _get_controlled_circuit_proto_pairs(qubit_type='grid'):
@@ -420,23 +803,34 @@ def _get_valid_pauli_proto_pairs(qubit_type='grid'):
         q0_str = '0'
         q1_str = '1'
 
-    pairs = [
-        (cirq.PauliSum.from_pauli_strings((2.1 + 0.2j) * cirq.Z(q0)),
-         _build_pauli_proto([2.1 + 0.2j], [['Z']], [[q0_str]])),
-        (cirq.PauliSum.from_pauli_strings((1.0 + 0.0j) * cirq.X(q0)),
-         _build_pauli_proto([1.0 + 0.0j], [['X']], [[q0_str]])),
-        (cirq.PauliSum.from_pauli_strings((0.0 + 1.0j) * cirq.Y(q0)),
-         _build_pauli_proto([0.0 + 1.0j], [['Y']], [[q0_str]])),
-        ((0.0 + 1.0j) * cirq.Y(q0) + 1.0 * cirq.Z(q1),
-         _build_pauli_proto([0.0 + 1.0j, 1.0 + 0.0j], [['Y'], ['Z']],
-                            [[q0_str], [q1_str]])),
-        (2.0 * cirq.Y(q1) + 1.0 * cirq.Z(q0) + cirq.X(q0) * cirq.X(q1),
-         _build_pauli_proto([2.0 + 0.0j, 1.0 + 0.0j, 1.0 + 0.0j],
-                            [['Y'], ['Z'], ['X', 'X']],
-                            [[q1_str], [q0_str], [q0_str, q1_str]])),
+    return [
+        (
+            cirq.PauliSum.from_pauli_strings((2.1 + 0.2j) * cirq.Z(q0)),
+            _build_pauli_proto([2.1 + 0.2j], [['Z']], [[q0_str]]),
+        ),
+        (
+            cirq.PauliSum.from_pauli_strings((1.0 + 0.0j) * cirq.X(q0)),
+            _build_pauli_proto([1.0 + 0.0j], [['X']], [[q0_str]]),
+        ),
+        (
+            cirq.PauliSum.from_pauli_strings((0.0 + 1.0j) * cirq.Y(q0)),
+            _build_pauli_proto([0.0 + 1.0j], [['Y']], [[q0_str]]),
+        ),
+        (
+            (0.0 + 1.0j) * cirq.Y(q0) + 1.0 * cirq.Z(q1),
+            _build_pauli_proto(
+                [0.0 + 1.0j, 1.0 + 0.0j], [['Y'], ['Z']], [[q0_str], [q1_str]]
+            ),
+        ),
+        (
+            2.0 * cirq.Y(q1) + 1.0 * cirq.Z(q0) + cirq.X(q0) * cirq.X(q1),
+            _build_pauli_proto(
+                [2.0 + 0.0j, 1.0 + 0.0j, 1.0 + 0.0j],
+                [['Y'], ['Z'], ['X', 'X']],
+                [[q1_str], [q0_str], [q0_str, q1_str]],
+            ),
+        ),
     ]
-
-    return pairs
 
 
 def _get_valid_projector_proto_pairs(qubit_type='grid'):
@@ -452,22 +846,30 @@ def _get_valid_projector_proto_pairs(qubit_type='grid'):
         q0_str = '0'
         q1_str = '1'
 
-    pairs = [
-        (cirq.ProjectorSum.from_projector_strings(
-            cirq.ProjectorString(projector_dict={q0: 0})),
-         _build_projector_proto([1.0], [[0]], [[q0_str]])),
-        (cirq.ProjectorSum.from_projector_strings(
-            cirq.ProjectorString(projector_dict={q0: 0}, coefficient=0.125j)),
-         _build_projector_proto([0.125j], [[0]], [[q0_str]])),
-        (cirq.ProjectorSum.from_projector_strings([
-            cirq.ProjectorString(projector_dict={
-                q0: 0,
-                q1: 1
-            }),
-        ]), _build_projector_proto([1.0], [[0, 1]], [[q0_str, q1_str]])),
+    return [
+        (
+            cirq.ProjectorSum.from_projector_strings(
+                cirq.ProjectorString(projector_dict={q0: 0})
+            ),
+            _build_projector_proto([1.0], [[0]], [[q0_str]]),
+        ),
+        (
+            cirq.ProjectorSum.from_projector_strings(
+                cirq.ProjectorString(
+                    projector_dict={q0: 0}, coefficient=0.125j
+                )
+            ),
+            _build_projector_proto([0.125j], [[0]], [[q0_str]]),
+        ),
+        (
+            cirq.ProjectorSum.from_projector_strings(
+                [
+                    cirq.ProjectorString(projector_dict={q0: 0, q1: 1}),
+                ]
+            ),
+            _build_projector_proto([1.0], [[0, 1]], [[q0_str, q1_str]]),
+        ),
     ]
-
-    return pairs
 
 
 def _get_noise_proto_pairs(qubit_type='grid'):
@@ -478,47 +880,54 @@ def _get_noise_proto_pairs(qubit_type='grid'):
         q0 = cirq.LineQubit(0)
         q0_str = '0'
 
-    # NOTE(tonybruguier): All the parameters are powers of 2. This is because
-    # Python only uses double, which means that Protobufs use double even if the
-    # field is a float. However, the serialization sometimes goes though C++ and
-    # thus would use float. Thus, we need to have numbers that are exactly
-    # representable on a float. Powers of 2 are a convenient subset.
-    pairs = [
+    return [
         # Depolarization.
-        (cirq.Circuit(cirq.depolarize(p=0.5)(q0)),
-         _build_op_proto("DP", ['p'], [0.5], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.depolarize(p=0.5)(q0)),
+            _build_op_proto("DP", ['p'], [0.5], [q0_str]),
+        ),
         # Asymmetric depolarization.
-        (cirq.Circuit(
-            cirq.asymmetric_depolarize(p_x=0.125, p_y=0.25, p_z=0.5)(q0)),
-         _build_op_proto("ADP", ['p_x', 'p_y', 'p_z'], [0.125, 0.25, 0.5],
-                         [q0_str])),
-
+        (
+            cirq.Circuit(
+                cirq.asymmetric_depolarize(p_x=0.125, p_y=0.25, p_z=0.5)(q0)
+            ),
+            _build_op_proto(
+                "ADP", ['p_x', 'p_y', 'p_z'], [0.125, 0.25, 0.5], [q0_str]
+            ),
+        ),
         # Generalized Amplitude damp.
-        (cirq.Circuit(cirq.generalized_amplitude_damp(p=0.125, gamma=0.25)(q0)),
-         _build_op_proto("GAD", ['p', 'gamma'], [0.125, 0.25], [q0_str])),
-
+        (
+            cirq.Circuit(
+                cirq.generalized_amplitude_damp(p=0.125, gamma=0.25)(q0)
+            ),
+            _build_op_proto("GAD", ['p', 'gamma'], [0.125, 0.25], [q0_str]),
+        ),
         # Amplitude damp.
-        (cirq.Circuit(cirq.amplitude_damp(gamma=0.125)(q0)),
-         _build_op_proto("AD", ['gamma'], [0.125], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.amplitude_damp(gamma=0.125)(q0)),
+            _build_op_proto("AD", ['gamma'], [0.125], [q0_str]),
+        ),
         # Reset.
-        (cirq.Circuit(cirq.reset(q0)), _build_op_proto("RST", [], [],
-                                                       [q0_str])),
-
+        (
+            cirq.Circuit(cirq.reset(q0)),
+            _build_op_proto("RST", [], [], [q0_str]),
+        ),
         # Phase damp.
-        (cirq.Circuit(cirq.phase_damp(gamma=0.125)(q0)),
-         _build_op_proto("PD", ['gamma'], [0.125], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.phase_damp(gamma=0.125)(q0)),
+            _build_op_proto("PD", ['gamma'], [0.125], [q0_str]),
+        ),
         # Phase flip.
-        (cirq.Circuit(cirq.phase_flip(p=0.125)(q0)),
-         _build_op_proto("PF", ['p'], [0.125], [q0_str])),
-
+        (
+            cirq.Circuit(cirq.phase_flip(p=0.125)(q0)),
+            _build_op_proto("PF", ['p'], [0.125], [q0_str]),
+        ),
         # Bit flip.
-        (cirq.Circuit(cirq.bit_flip(p=0.125)(q0)),
-         _build_op_proto("BF", ['p'], [0.125], [q0_str]))
+        (
+            cirq.Circuit(cirq.bit_flip(p=0.125)(q0)),
+            _build_op_proto("BF", ['p'], [0.125], [q0_str]),
+        ),
     ]
-    return pairs
 
 
 def _build_pauli_proto(coefs, ops, qubit_ids):
@@ -636,12 +1045,9 @@ class SerializerTest(tf.test.TestCase, parameterized.TestCase):
         with self.assertRaisesRegex(ValueError, expected_regex="cirq.I"):
             serializer.serialize_circuit(unsupported_circuit)
 
-    @parameterized.parameters([
-        {
+    @parameterized.parameters([{
             "gate_with_param": g(p)
-        }
-        # Use a gate from each category of serializer
-        for g in [
+        } for g in [
             # eigen
             lambda p: cirq.Circuit(
                 cirq.HPowGate(exponent=p, global_shift=p)
@@ -655,16 +1061,9 @@ class SerializerTest(tf.test.TestCase, parameterized.TestCase):
             lambda p: cirq.Circuit(
                 cirq.FSimGate(theta=p, phi=p)
                 (cirq.GridQubit(0, 0), cirq.GridQubit(0, 1))),
-        ]
-        # Attempt parameterization with a variety of numeric types
-        for p in
-        [0.35, float(0.35), 35e-2,
-         np.float32(0.35),
-         np.float64(0.35), 7]
-        for (q0, q1) in [(
+        ] for p in [0.35, 0.35, 35e-2, np.float32(0.35), np.float64(0.35), 7] for (q0, q1) in [(
             cirq.GridQubit(0, 1),
-            cirq.GridQubit(0, 0)), (cirq.LineQubit(0), cirq.LineQubit(1))]
-    ])
+            cirq.GridQubit(0, 0)), (cirq.LineQubit(0), cirq.LineQubit(1))]])
     def test_serialize_circuit_valid_number_types(self, gate_with_param):
         """Tests number datatype support by our serializer."""
         self.assertAllClose(

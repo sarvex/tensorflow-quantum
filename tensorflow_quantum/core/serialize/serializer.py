@@ -817,17 +817,13 @@ def serialize_circuit(circuit_inp):
     """
     circuit = copy.deepcopy(circuit_inp)
     if not isinstance(circuit, cirq.Circuit):
-        raise TypeError("serialize requires cirq.Circuit objects."
-                        " Given: " + str(type(circuit)))
-
-    # This code is intentionally written to avoid using cirq functions
-    # as this get analyzed by tensorflow-autograph.
-
-    # Gives a map from moment index to measure qubits in moment
-    measured_moments = dict()
+        raise TypeError(
+            f"serialize requires cirq.Circuit objects. Given: {str(type(circuit))}"
+        )
 
     # Tracks qubits that have been measured already.
     all_measured_qubits = set()
+    measured_moments = {}
     for i, moment in enumerate(circuit.moments):
         measured_qubits = set()
         for op in moment:
@@ -847,7 +843,7 @@ def serialize_circuit(circuit_inp):
                     measured_qubits.add(qubit)
                     all_measured_qubits.add(qubit)
 
-        if len(measured_qubits) > 0:
+        if measured_qubits:
             measured_moments[i] = measured_qubits
 
     # Remove terminal measurements.
@@ -855,8 +851,11 @@ def serialize_circuit(circuit_inp):
         old_moment = circuit[moment_ind]
         measured_qubits = measured_moments[moment_ind]
         new_moment = cirq.Moment(
-            filter(lambda x: not any(y in measured_qubits for y in x.qubits),
-                   old_moment.operations))
+            filter(
+                lambda x: all(y not in measured_qubits for y in x.qubits),
+                old_moment.operations,
+            )
+        )
         circuit[moment_ind] = new_moment
 
     # Demote cirq.controlled_operations (controlled gates) to their sub_gate
@@ -868,7 +867,7 @@ def serialize_circuit(circuit_inp):
         controlled_ops = [
             op for op in moment if isinstance(op, cirq.ControlledOperation)
         ]
-        new_ops = dict()
+        new_ops = {}
         for op in controlled_ops:
             tfq_compatible = op.sub_operation
             tfq_compatible._tfq_control_qubits = op.controls

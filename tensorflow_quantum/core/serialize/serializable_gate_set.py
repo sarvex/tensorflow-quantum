@@ -126,16 +126,15 @@ class SerializableGateSet:
         if msg is None:
             msg = program_pb2.Program()
         msg.language.gate_set = self.gate_set_name
-        if isinstance(program, cirq.Circuit):
-            self._serialize_circuit(program,
-                                    msg.circuit,
-                                    arg_function_language=arg_function_language)
-            if arg_function_language is None:
-                arg_function_language = (_infer_function_language_from_circuit(
-                    msg.circuit))
-        else:
+        if not isinstance(program, cirq.Circuit):
             raise NotImplementedError(
                 f'Unrecognized program type: {type(program)}')
+        self._serialize_circuit(program,
+                                msg.circuit,
+                                arg_function_language=arg_function_language)
+        if arg_function_language is None:
+            arg_function_language = (_infer_function_language_from_circuit(
+                msg.circuit))
         msg.language.arg_function_language = arg_function_language
         return msg
 
@@ -183,8 +182,9 @@ class SerializableGateSet:
         if not proto.HasField('language') or not proto.language.gate_set:
             raise ValueError('Missing gate set specification.')
         if proto.language.gate_set != self.gate_set_name:
-            raise ValueError('Gate set in proto was {} but expected {}'.format(
-                proto.language.gate_set, self.gate_set_name))
+            raise ValueError(
+                f'Gate set in proto was {proto.language.gate_set} but expected {self.gate_set_name}'
+            )
         which = proto.WhichOneof('program')
         if which == 'circuit':
             circuit = self._deserialize_circuit(
@@ -214,9 +214,9 @@ class SerializableGateSet:
 
         gate_id = operation_proto.gate.id
         if gate_id not in self.deserializers.keys():
-            raise ValueError('Unsupported serialized gate with id "{}".'
-                             '\n\noperation_proto:\n{}'.format(
-                                 gate_id, operation_proto))
+            raise ValueError(
+                f'Unsupported serialized gate with id "{gate_id}".\n\noperation_proto:\n{operation_proto}'
+            )
 
         return self.deserializers[gate_id].from_proto(
             operation_proto, arg_function_language=arg_function_language)

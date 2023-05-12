@@ -177,7 +177,7 @@ class SampleTest(tf.test.TestCase, parameterized.TestCase):
         programs = []
         expected_outputs = []
         for n_qubits in all_n_qubits:
-            programs.append(cirq.Circuit(*cirq.X.on_each(*bits[0:n_qubits])))
+            programs.append(cirq.Circuit(*cirq.X.on_each(*bits[:n_qubits])))
             expected_outputs.append([[1] * n_qubits for _ in range(n_samples)])
         symbol_values = np.random.random((len(all_n_qubits), len(symbol_names)))
         layer_output = sampler(programs,

@@ -168,7 +168,7 @@ class ControlledPQC(tf.keras.layers.Layer):
 
         self._circuit = util.convert_to_tensor([model_circuit])
 
-        if len(self._symbols_list) == 0:
+        if not self._symbols_list:
             raise ValueError("model_circuit has no sympy.Symbols. Please "
                              "provide a circuit that contains symbols so "
                              "that their values can be trained.")
@@ -178,14 +178,12 @@ class ControlledPQC(tf.keras.layers.Layer):
             operators = [operators]
 
         if not isinstance(operators, (list, np.ndarray, tuple)):
-            raise TypeError("operators must be a cirq.PauliSum or "
-                            "cirq.PauliString, or a list, tuple, "
-                            "or np.array containing them. "
-                            "Got {}.".format(type(operators)))
-        if not all([
-                isinstance(op, (cirq.PauliString, cirq.PauliSum))
-                for op in operators
-        ]):
+            raise TypeError(
+                f"operators must be a cirq.PauliSum or cirq.PauliString, or a list, tuple, or np.array containing them. Got {type(operators)}."
+            )
+        if not all(
+            isinstance(op, (cirq.PauliString, cirq.PauliSum)) for op in operators
+        ):
             raise TypeError("Each element in operators to measure "
                             "must be a cirq.PauliString"
                             " or cirq.PauliSum")
@@ -258,20 +256,17 @@ class ControlledPQC(tf.keras.layers.Layer):
         model_appended = self._append_layer(inputs[0], append=tiled_up_model)
         tiled_up_operators = tf.tile(self._operators, [circuit_batch_dim, 1])
 
-        # this is disabled to make autograph compilation easier.
-        # pylint: disable=no-else-return
         if self._analytic:
             return self._layer(model_appended,
                                symbol_names=self._symbols,
                                symbol_values=inputs[1],
                                operators=tiled_up_operators)
-        else:
-            tiled_up_repetitions = tf.tile(self._repetitions,
-                                           [circuit_batch_dim, 1])
-            return self._layer(model_appended,
-                               symbol_names=self._symbols,
-                               symbol_values=inputs[1],
-                               operators=tiled_up_operators,
-                               repetitions=tiled_up_repetitions)
+        tiled_up_repetitions = tf.tile(self._repetitions,
+                                       [circuit_batch_dim, 1])
+        return self._layer(model_appended,
+                           symbol_names=self._symbols,
+                           symbol_values=inputs[1],
+                           operators=tiled_up_operators,
+                           repetitions=tiled_up_repetitions)
 
         # pylint: enable=no-else-return

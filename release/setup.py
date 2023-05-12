@@ -78,7 +78,7 @@ project_name = 'tensorflow-quantum'
 build_version = CUR_VERSION
 if nightly:
     project_name = 'tfq-nightly'
-    build_version = CUR_VERSION + '.dev' + str(date.today()).replace('-', '')
+    build_version = f'{CUR_VERSION}.dev' + str(date.today()).replace('-', '')
 
 setup(
     name=project_name,

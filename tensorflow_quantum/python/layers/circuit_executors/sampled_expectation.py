@@ -282,10 +282,7 @@ class SampledExpectation(tf.keras.layers.Layer):
                 expectation value for each circuit with each op applied to it
                 (after resolving the corresponding parameters in).
         """
-        values_empty = False
-        if symbol_values is None:
-            values_empty = True
-
+        values_empty = symbol_values is None
         inputs, symbol_names, symbol_values = input_checks.expand_circuits(
             inputs, symbol_names, symbol_values)
 

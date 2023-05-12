@@ -329,8 +329,7 @@ class SampledExpectationFunctionalTests(parameterized.TestCase,
         """
         bit = cirq.GridQubit(0, 0)
         symbols = sympy.symbols('x y z')
-        circuit = _gen_single_bit_rotation_problem(
-            bit, symbols, True if backend == 'noisy' else False)
+        circuit = _gen_single_bit_rotation_problem(bit, symbols, backend == 'noisy')
 
         inputs = tf.keras.Input(shape=(1,), dtype=tf.dtypes.float64)
         datum = tf.keras.Input(shape=(), dtype=tf.dtypes.string)
@@ -366,10 +365,16 @@ class SampledExpectationFunctionalTests(parameterized.TestCase,
         ops = util.convert_to_tensor([[cirq.Z(bit)], [cirq.Z(bit)]])
         n = tf.convert_to_tensor([[5000], [5000]], dtype=tf.int32)
 
-        circuit = util.convert_to_tensor([
-            _gen_single_bit_rotation_problem(
-                bit, symbols, True if backend == 'noisy' else False)
-        ] * 2)
+        circuit = util.convert_to_tensor(
+            (
+                [
+                    _gen_single_bit_rotation_problem(
+                        bit, symbols, backend == 'noisy'
+                    )
+                ]
+                * 2
+            )
+        )
 
         data_out = tf.convert_to_tensor(np.array([[1], [1]]))
         op_inp = tf.keras.Input(shape=(1,), dtype=tf.dtypes.string)
@@ -405,10 +410,16 @@ class SampledExpectationFunctionalTests(parameterized.TestCase,
         symbols = sympy.symbols('x y z')
         ops = util.convert_to_tensor([[cirq.Z(bit)], [cirq.Z(bit)]])
         n = tf.convert_to_tensor([[5000], [5000]], dtype=tf.int32)
-        circuits = util.convert_to_tensor([
-            _gen_single_bit_rotation_problem(
-                bit, symbols, True if backend == 'noisy' else False)
-        ] * 2)
+        circuits = util.convert_to_tensor(
+            (
+                [
+                    _gen_single_bit_rotation_problem(
+                        bit, symbols, backend == 'noisy'
+                    )
+                ]
+                * 2
+            )
+        )
         data_in = np.array([[1], [0]])
         data_out = np.array([[1], [1]])
 
@@ -447,10 +458,16 @@ class SampledExpectationFunctionalTests(parameterized.TestCase,
         """
         bit = cirq.GridQubit(0, 0)
         symbols = sympy.symbols('x, y, z')
-        circuits = util.convert_to_tensor([
-            _gen_single_bit_rotation_problem(
-                bit, symbols, True if backend == 'noisy' else False)
-        ] * 2)
+        circuits = util.convert_to_tensor(
+            (
+                [
+                    _gen_single_bit_rotation_problem(
+                        bit, symbols, backend == 'noisy'
+                    )
+                ]
+                * 2
+            )
+        )
         data_in = np.array([[1], [0]], dtype=np.float32)
         data_out = np.array([[5], [-5]], dtype=np.float32)
 

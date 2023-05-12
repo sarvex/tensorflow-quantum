@@ -25,22 +25,23 @@ class TFIChainTest(tf.test.TestCase):
     # pylint: disable=C0103
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Setup data for the test"""
-        self.random_subset_size = 10
-        self.supported_nspins_tfi_chain = [4, 8, 12, 16]
-        self.data_dict_tfi_chain = {}
-        self.qbs_dict_tfi_chain = {}
-        for nspins in self.supported_nspins_tfi_chain:
+        cls.random_subset_size = 10
+        cls.supported_nspins_tfi_chain = [4, 8, 12, 16]
+        cls.data_dict_tfi_chain = {}
+        cls.qbs_dict_tfi_chain = {}
+        for nspins in cls.supported_nspins_tfi_chain:
             qbs_tfi_chain = cirq.GridQubit.rect(nspins, 1)
-            self.data_dict_tfi_chain[nspins] = spin_system.tfi_chain(
+            cls.data_dict_tfi_chain[nspins] = spin_system.tfi_chain(
                 qbs_tfi_chain,
                 'closed',
             )
-            self.qbs_dict_tfi_chain[nspins] = qbs_tfi_chain
-        self.random_subset_tfi_chain = np.random.permutation(list(
-            range(76)))[:self.random_subset_size]
-        super(TFIChainTest).__init__(self)
+            cls.qbs_dict_tfi_chain[nspins] = qbs_tfi_chain
+        cls.random_subset_tfi_chain = np.random.permutation(list(range(76)))[
+            : cls.random_subset_size
+        ]
+        super(TFIChainTest).__init__(cls)
 
     def test_errors(self):
         """Test that it errors on invalid arguments."""
@@ -123,23 +124,24 @@ class XXZChainTest(tf.test.TestCase):
     # pylint: disable=C0103
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Setup data for the test"""
-        self.random_subset_size = 10
+        cls.random_subset_size = 10
         # XXZ CHAIN
-        self.supported_nspins_xxz_chain = [4, 8, 12, 16]
-        self.data_dict_xxz_chain = {}
-        self.qbs_dict_xxz_chain = {}
-        for nspins in self.supported_nspins_xxz_chain:
+        cls.supported_nspins_xxz_chain = [4, 8, 12, 16]
+        cls.data_dict_xxz_chain = {}
+        cls.qbs_dict_xxz_chain = {}
+        for nspins in cls.supported_nspins_xxz_chain:
             qbs_xxz_chain = cirq.GridQubit.rect(nspins, 1)
-            self.data_dict_xxz_chain[nspins] = spin_system.xxz_chain(
+            cls.data_dict_xxz_chain[nspins] = spin_system.xxz_chain(
                 qbs_xxz_chain,
                 'closed',
             )
-            self.qbs_dict_xxz_chain[nspins] = qbs_xxz_chain
-        self.random_subset_xxz_chain = np.random.permutation(list(
-            range(76)))[:self.random_subset_size]
-        super(XXZChainTest).__init__(self)
+            cls.qbs_dict_xxz_chain[nspins] = qbs_xxz_chain
+        cls.random_subset_xxz_chain = np.random.permutation(list(range(76)))[
+            : cls.random_subset_size
+        ]
+        super(XXZChainTest).__init__(cls)
 
     def test_errors(self):
         """Test that it errors on invalid arguments."""
@@ -222,24 +224,24 @@ class TFIRectangularTest(tf.test.TestCase):
     # pylint: disable=C0103
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Setup data for the test"""
-        self.random_subset_size = 10
+        cls.random_subset_size = 10
         # TFI RECT
-        self.supported_nspins_tfi_rectangular = [9, 12, 16]
-        self.data_dict_tfi_rectangular = {}
-        self.qbs_dict_tfi_rectangular = {}
-        for nspins in self.supported_nspins_tfi_rectangular:
+        cls.supported_nspins_tfi_rectangular = [9, 12, 16]
+        cls.data_dict_tfi_rectangular = {}
+        cls.qbs_dict_tfi_rectangular = {}
+        for nspins in cls.supported_nspins_tfi_rectangular:
             qbs_tfi_rectangular = cirq.GridQubit.rect(nspins, 1)
-            self.data_dict_tfi_rectangular[
-                nspins] = spin_system.tfi_rectangular(
-                    qbs_tfi_rectangular,
-                    'torus',
-                )
-            self.qbs_dict_tfi_rectangular[nspins] = qbs_tfi_rectangular
-        self.random_subset_tfi_rectangular = np.random.permutation(
-            list(range(51)))[:self.random_subset_size]
-        super(TFIRectangularTest).__init__(self)
+            cls.data_dict_tfi_rectangular[nspins] = spin_system.tfi_rectangular(
+                qbs_tfi_rectangular,
+                'torus',
+            )
+            cls.qbs_dict_tfi_rectangular[nspins] = qbs_tfi_rectangular
+        cls.random_subset_tfi_rectangular = np.random.permutation(list(range(51)))[
+            : cls.random_subset_size
+        ]
+        super(TFIRectangularTest).__init__(cls)
 
     def test_errors(self):
         """Test that it errors on invalid arguments."""

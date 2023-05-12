@@ -53,7 +53,7 @@ def get_supported_gates():
     supported_ops = serializer.SERIALIZER.supported_gate_types()
     supported_gates = filter(lambda x: x not in _SUPPORTED_CHANNELS,
                              supported_ops)
-    gate_arity_mapping_dict = dict()
+    gate_arity_mapping_dict = {}
     for gate in supported_gates:
         if gate is cirq.IdentityGate:
             g_num_qubits = 1
@@ -77,18 +77,16 @@ def get_supported_channels():
     Returns a dictionary mapping from supported channel types
     to number of qubits.
     """
-    # Add new channels here whenever additional support is needed.
-    channel_mapping = dict()
-    channel_mapping[cirq.DepolarizingChannel(0.01)] = 1
-    channel_mapping[cirq.AsymmetricDepolarizingChannel(0.01, 0.02, 0.03)] = 1
-    channel_mapping[cirq.GeneralizedAmplitudeDampingChannel(0.01, 0.02)] = 1
-    channel_mapping[cirq.AmplitudeDampingChannel(0.01)] = 1
-    channel_mapping[cirq.ResetChannel()] = 1
-    channel_mapping[cirq.PhaseDampingChannel(0.01)] = 1
-    channel_mapping[cirq.PhaseFlipChannel(0.01)] = 1
-    channel_mapping[cirq.BitFlipChannel(0.01)] = 1
-
-    return channel_mapping
+    return {
+        cirq.DepolarizingChannel(0.01): 1,
+        cirq.AsymmetricDepolarizingChannel(0.01, 0.02, 0.03): 1,
+        cirq.GeneralizedAmplitudeDampingChannel(0.01, 0.02): 1,
+        cirq.AmplitudeDampingChannel(0.01): 1,
+        cirq.ResetChannel(): 1,
+        cirq.PhaseDampingChannel(0.01): 1,
+        cirq.PhaseFlipChannel(0.01): 1,
+        cirq.BitFlipChannel(0.01): 1,
+    }
 
 
 def _apply_random_control(gate, all_qubits):
@@ -311,14 +309,15 @@ def convert_to_tensor(items_to_convert, deterministic_proto_serialize=False):
         for item in items_to_convert:
             if isinstance(item, (list, np.ndarray, tuple)):
                 tensored_items.append(recur(item, curr_type))
-            elif isinstance(item, (cirq.PauliSum, cirq.PauliString)) and\
-                    not curr_type == cirq.Circuit:
+            elif (
+                isinstance(item, (cirq.PauliSum, cirq.PauliString))
+                and curr_type != cirq.Circuit
+            ):
                 curr_type = cirq.PauliSum
                 tensored_items.append(
                     serializer.serialize_paulisum(item).SerializeToString(
                         deterministic=deterministic_proto_serialize))
-            elif isinstance(item, cirq.Circuit) and\
-                    not curr_type == cirq.PauliSum:
+            elif isinstance(item, cirq.Circuit) and curr_type != cirq.PauliSum:
                 curr_type = cirq.Circuit
                 tensored_items.append(
                     serializer.serialize_circuit(item).SerializeToString(
@@ -339,16 +338,13 @@ def _parse_single(item):
             # Return a circuit parsing
             obj = program_pb2.Program()
             obj.ParseFromString(item)
-            out = serializer.deserialize_circuit(obj)
-            return out
-
+            return serializer.deserialize_circuit(obj)
         # Return a PauliSum parsing.
         obj = pauli_sum_pb2.PauliSum()
         obj.ParseFromString(item)
-        out = serializer.deserialize_paulisum(obj)
-        return out
+        return serializer.deserialize_paulisum(obj)
     except Exception:
-        raise TypeError('Error decoding item: ' + str(item))
+        raise TypeError(f'Error decoding item: {str(item)}')
 
 
 def from_tensor(tensor_to_convert):
@@ -392,15 +388,16 @@ def from_tensor(tensor_to_convert):
     if isinstance(tensor_to_convert, tf.Tensor):
         tensor_to_convert = tensor_to_convert.numpy()
     if not isinstance(tensor_to_convert, (np.ndarray, list, tuple)):
-        raise TypeError("tensor_to_convert received bad "
-                        "type {}".format(type(tensor_to_convert)))
+        raise TypeError(
+            f"tensor_to_convert received bad type {type(tensor_to_convert)}"
+        )
     tensor_to_convert = np.array(tensor_to_convert)
     python_items = np.empty(tensor_to_convert.shape, dtype=object)
     curr_type = None
     for index, item in np.ndenumerate(tensor_to_convert):
         found_item = _parse_single(item)
         got_type = type(found_item)
-        if (curr_type is not None) and (not got_type == curr_type):
+        if curr_type is not None and got_type != curr_type:
             raise TypeError("from_tensor expected to find a tensor containing"
                             " elements of a single type.")
         curr_type = got_type
@@ -470,10 +467,11 @@ def _symbols_in_op(op):
 
     raise ValueError(
         "Attempted to scan for symbols in circuit with unsupported"
-        " ops inside.", "Expected op found in "
-        "tfq.util.get_supported_gates but found: {}.".format(str(op)),
+        " ops inside.",
+        f"Expected op found in tfq.util.get_supported_gates but found: {str(op)}.",
         "Please make sure circuits contain only ops found in "
-        "tfq.util.get_supported_gates().")
+        "tfq.util.get_supported_gates().",
+    )
 
 
 def _expression_approx_eq(exp_1, exp_2, atol):
@@ -513,40 +511,48 @@ def _expression_approx_eq(exp_1, exp_2, atol):
 # TODO: replace with cirq.approx_eq once
 # https://github.com/quantumlib/Cirq/issues/3886 is resolved for all channels.
 def _channel_approx_eq(op_true, op_deser, atol=1e-5):
-    if isinstance(op_true, cirq.DepolarizingChannel):
-        if isinstance(op_deser, cirq.DepolarizingChannel):
-            return abs(op_true.p - op_deser.p) < atol
+    if isinstance(op_true, cirq.DepolarizingChannel) and isinstance(
+        op_deser, cirq.DepolarizingChannel
+    ):
+        return abs(op_true.p - op_deser.p) < atol
 
-    if isinstance(op_true, cirq.AsymmetricDepolarizingChannel):
-        if isinstance(op_deser, cirq.AsymmetricDepolarizingChannel):
-            return abs(op_true.p_x - op_deser.p_x) < atol and \
-                   abs(op_true.p_y - op_deser.p_y) < atol and \
-                   abs(op_true.p_z - op_deser.p_z) < atol
+    if isinstance(op_true, cirq.AsymmetricDepolarizingChannel) and isinstance(
+        op_deser, cirq.AsymmetricDepolarizingChannel
+    ):
+        return abs(op_true.p_x - op_deser.p_x) < atol and \
+               abs(op_true.p_y - op_deser.p_y) < atol and \
+               abs(op_true.p_z - op_deser.p_z) < atol
 
-    if isinstance(op_true, cirq.GeneralizedAmplitudeDampingChannel):
-        if isinstance(op_deser, cirq.GeneralizedAmplitudeDampingChannel):
-            return abs(op_true.p - op_deser.p) < atol and \
-                   abs(op_true.gamma - op_deser.gamma) < atol
+    if isinstance(
+        op_true, cirq.GeneralizedAmplitudeDampingChannel
+    ) and isinstance(op_deser, cirq.GeneralizedAmplitudeDampingChannel):
+        return abs(op_true.p - op_deser.p) < atol and \
+               abs(op_true.gamma - op_deser.gamma) < atol
 
-    if isinstance(op_true, cirq.AmplitudeDampingChannel):
-        if isinstance(op_deser, cirq.AmplitudeDampingChannel):
-            return abs(op_true.gamma - op_deser.gamma) < atol
+    if isinstance(op_true, cirq.AmplitudeDampingChannel) and isinstance(
+        op_deser, cirq.AmplitudeDampingChannel
+    ):
+        return abs(op_true.gamma - op_deser.gamma) < atol
 
-    if isinstance(op_true, cirq.ResetChannel):
-        if isinstance(op_deser, cirq.ResetChannel):
-            return True
+    if isinstance(op_true, cirq.ResetChannel) and isinstance(
+        op_deser, cirq.ResetChannel
+    ):
+        return True
 
-    if isinstance(op_true, cirq.PhaseDampingChannel):
-        if isinstance(op_deser, cirq.PhaseDampingChannel):
-            return abs(op_true.gamma - op_deser.gamma) < atol
+    if isinstance(op_true, cirq.PhaseDampingChannel) and isinstance(
+        op_deser, cirq.PhaseDampingChannel
+    ):
+        return abs(op_true.gamma - op_deser.gamma) < atol
 
-    if isinstance(op_true, cirq.PhaseFlipChannel):
-        if isinstance(op_deser, cirq.PhaseFlipChannel):
-            return abs(op_true.p - op_deser.p) < atol
+    if isinstance(op_true, cirq.PhaseFlipChannel) and isinstance(
+        op_deser, cirq.PhaseFlipChannel
+    ):
+        return abs(op_true.p - op_deser.p) < atol
 
-    if isinstance(op_true, cirq.BitFlipChannel):
-        if isinstance(op_deser, cirq.BitFlipChannel):
-            return abs(op_true.p - op_deser.p) < atol
+    if isinstance(op_true, cirq.BitFlipChannel) and isinstance(
+        op_deser, cirq.BitFlipChannel
+    ):
+        return abs(op_true.p - op_deser.p) < atol
 
     return False
 
@@ -587,9 +593,9 @@ def gate_approx_eq(gate_true, gate_deser, atol=1e-5):
             return False
         return gate_approx_eq(gate_true.sub_gate, gate_deser.sub_gate)
     supported_gates = serializer.SERIALIZER.supported_gate_types()
-    if not any([isinstance(gate_true, g) for g in supported_gates]):
+    if not any(isinstance(gate_true, g) for g in supported_gates):
         raise ValueError(f"`gate_true` not a valid TFQ gate, got {gate_true}")
-    if not any([isinstance(gate_deser, g) for g in supported_gates]):
+    if not any(isinstance(gate_deser, g) for g in supported_gates):
         raise ValueError(f"`gate_deser` not a valid TFQ gate, got {gate_deser}")
     if not isinstance(gate_true, type(gate_deser)):
         return False
@@ -688,10 +694,9 @@ def _many_z_to_single_z(focal_qubit, pauli_sum):
         gate_list: List of the required CNOT gates for this conversion.
         gate_list_reversed: List of the same CNOT gates, but in reverse.
     """
-    gate_list = []
-    for q in pauli_sum.qubits:
-        if q != focal_qubit:
-            gate_list.append(cirq.CNOT(q, focal_qubit))
+    gate_list = [
+        cirq.CNOT(q, focal_qubit) for q in pauli_sum.qubits if q != focal_qubit
+    ]
     return gate_list, gate_list[::-1]
 
 
@@ -708,20 +713,18 @@ def check_commutability(pauli_sum):
     for term1 in pauli_sum:
         for term2 in pauli_sum:
             if not cirq.commutes(term1, term2):
-                raise ValueError("Given an operator has non-commutable "
-                                 "terms, whose exponentiation is not "
-                                 "supported yet: {} and {}".format(
-                                     term1, term2))
+                raise ValueError(
+                    f"Given an operator has non-commutable terms, whose exponentiation is not supported yet: {term1} and {term2}"
+                )
 
 
 def exp_identity(param, c, zeroth_qubit):
     """Return a circuit for exponentiating an identity gate."""
     # TODO(jaeyoo): Reduce the number of gates for this decomposition.
     phase_shift = cirq.ZPowGate(exponent=-param * c / np.pi).on(zeroth_qubit)
-    exp_circuit = cirq.Circuit(
-        [cirq.X(zeroth_qubit), phase_shift,
-         cirq.X(zeroth_qubit), phase_shift])
-    return exp_circuit
+    return cirq.Circuit(
+        [cirq.X(zeroth_qubit), phase_shift, cirq.X(zeroth_qubit), phase_shift]
+    )
 
 
 def exponential(operators, coefficients=None):
@@ -777,13 +780,12 @@ def exponential(operators, coefficients=None):
                         " must be a float or a string or sympy.Symbol.")
 
     if len(coefficients) != len(operators):
-        raise ValueError("the number of operators should be the same as that "
-                         "of coefficients. Got {} operators and {} coefficients"
-                         "".format(len(operators), len(coefficients)))
+        raise ValueError(
+            f"the number of operators should be the same as that of coefficients. Got {len(operators)} operators and {len(coefficients)} coefficients"
+        )
 
     coefficients = [
-        sympy.Symbol(s) if isinstance(s, str) else s
-        for i, s in enumerate(coefficients)
+        sympy.Symbol(s) if isinstance(s, str) else s for s in coefficients
     ]
 
     circuit = cirq.Circuit()
@@ -795,7 +797,7 @@ def exponential(operators, coefficients=None):
 
     qubit_set = {q for psum in operators for q in psum.qubits}
     identity_ref_qubit = cirq.GridQubit(0, 0)
-    if len(qubit_set) > 0:
+    if qubit_set:
         identity_ref_qubit = sorted(list(qubit_set))[0]
 
     for param, pauli_sum in zip(coefficients, operators):
@@ -803,9 +805,9 @@ def exponential(operators, coefficients=None):
             check_commutability(pauli_sum)
         for op in pauli_sum:
             if abs(op.coefficient.imag) > 1e-9:
-                raise TypeError('exponential only supports real '
-                                'coefficients: got '
-                                '{}'.format(op.coefficient))
+                raise TypeError(
+                    f'exponential only supports real coefficients: got {op.coefficient}'
+                )
             # Create a circuit with exponentiating `op` with param
             c = op.coefficient.real
             if len(op.gate.pauli_mask) == 0:

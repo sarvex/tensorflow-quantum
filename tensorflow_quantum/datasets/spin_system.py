@@ -51,7 +51,7 @@ def unique_name():
     """
     num = 0
     while True:
-        yield "theta_" + str(num)
+        yield f"theta_{str(num)}"
         num += 1
 
 
@@ -77,18 +77,16 @@ def _download_spin_data(system_name, boundary_condition, nspins, data_dir):
 
     # Use Keras file downloader.
     file_path = tf.keras.utils.get_file(
-        fname=system_name + '.zip',
+        fname=f'{system_name}.zip',
         cache_dir=data_dir,
         cache_subdir='spin_systems',
-        origin="https://storage.googleapis.com/download"
-        ".tensorflow.org/data/quantum/"
-        "spin_systems/" + system_name + ".zip ",
-        extract=True)
+        origin=f"https://storage.googleapis.com/download.tensorflow.org/data/quantum/spin_systems/{system_name}.zip ",
+        extract=True,
+    )
 
     file_path = os.path.splitext(file_path)[0]
 
-    data_path = os.path.join(file_path, boundary_condition, str(nspins))
-    return data_path
+    return os.path.join(file_path, boundary_condition, str(nspins))
 
 
 def tfi_chain(qubits, boundary_condition="closed", data_dir=None):
@@ -234,13 +232,14 @@ def tfi_chain(qubits, boundary_condition="closed", data_dir=None):
     nspins = len(qubits)
     depth = nspins // 2
     if nspins not in supported_n:
-        raise ValueError("Supported number of spins are {}, received {}".format(
-            supported_n, nspins))
+        raise ValueError(
+            f"Supported number of spins are {supported_n}, received {nspins}"
+        )
 
     if boundary_condition not in supported_bc:
         raise ValueError(
-            "Supported boundary conditions are {}, received {}".format(
-                supported_bc, boundary_condition))
+            f"Supported boundary conditions are {supported_bc}, received {boundary_condition}"
+        )
 
     data_path = _download_spin_data('TFI_chain', boundary_condition, nspins,
                                     data_dir)
@@ -268,7 +267,7 @@ def tfi_chain(qubits, boundary_condition="closed", data_dir=None):
     additional_info = []
     labels = []
     # Load the data and append to the lists.
-    for i, directory in enumerate(x for x in os.listdir(data_path)):
+    for i, directory in enumerate(os.listdir(data_path)):
         # The folders are named according to the order value data they contain.
         g = float(directory)
         with open(os.path.join(data_path, directory, "stats.txt"), "r") as file:
@@ -461,13 +460,14 @@ def xxz_chain(qubits, boundary_condition="closed", data_dir=None):
     nspins = len(qubits)
     depth = nspins // 2
     if nspins not in supported_n:
-        raise ValueError("Supported number of spins are {}, received {}".format(
-            supported_n, nspins))
+        raise ValueError(
+            f"Supported number of spins are {supported_n}, received {nspins}"
+        )
 
     if boundary_condition not in supported_bc:
         raise ValueError(
-            "Supported boundary conditions are {}, received {}".format(
-                supported_bc, boundary_condition))
+            f"Supported boundary conditions are {supported_bc}, received {boundary_condition}"
+        )
 
     data_path = _download_spin_data('XXZ_chain', boundary_condition, nspins,
                                     data_dir)
@@ -505,7 +505,7 @@ def xxz_chain(qubits, boundary_condition="closed", data_dir=None):
     additional_info = []
     labels = []
     # Load the data and append to the lists.
-    for i, directory in enumerate(x for x in os.listdir(data_path)):
+    for i, directory in enumerate(os.listdir(data_path)):
         # The folders are named according to the order value data they contain.
         g = float(directory)
         with open(os.path.join(data_path, directory, "stats.txt"), "r") as file:

@@ -33,7 +33,7 @@ class ADJGradTest(tf.test.TestCase, parameterized.TestCase):
         symbol_names = ['alpha']
         qubits = cirq.GridQubit.rect(1, n_qubits)
         circuit_batch, resolver_batch = \
-            util.random_symbol_circuit_resolver_batch(
+                util.random_symbol_circuit_resolver_batch(
                 qubits, symbol_names, batch_size)
 
         symbol_values_array = np.array(
@@ -202,14 +202,16 @@ class ADJGradTest(tf.test.TestCase, parameterized.TestCase):
                 tf.convert_to_tensor([upstream_grads]))
 
         with self.assertRaisesRegex(
-                tf.errors.InvalidArgumentError,
-                expected_regex='gradients and circuits do not match'):
+                    tf.errors.InvalidArgumentError,
+                    expected_regex='gradients and circuits do not match'):
             # wrong grad batch size.
             tfq_adj_grad_op.tfq_adj_grad(
-                util.convert_to_tensor(circuit_batch), symbol_names,
+                util.convert_to_tensor(circuit_batch),
+                symbol_names,
                 tf.convert_to_tensor(symbol_values_array),
                 util.convert_to_tensor([[x] for x in pauli_sums]),
-                tf.convert_to_tensor([[0 for i in range(len(symbol_names))]]))
+                tf.convert_to_tensor([[0 for _ in range(len(symbol_names))]]),
+            )
 
         with self.assertRaisesRegex(
                 tf.errors.InvalidArgumentError,

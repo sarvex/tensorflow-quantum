@@ -54,12 +54,12 @@ class FidelityTest(tf.test.TestCase, parameterized.TestCase):
         symbol_names = ['alpha', 'beta', 'gamma']
         qubits = cirq.GridQubit.rect(1, n_qubits)
         circuit_batch, resolver_batch = \
-            util.random_symbol_circuit_resolver_batch(
+                util.random_symbol_circuit_resolver_batch(
                 qubits, symbol_names, batch_size)
 
         other_batch = [
             util.random_circuit_resolver_batch(qubits, inner_dim_size)[0]
-            for i in range(batch_size)
+            for _ in range(batch_size)
         ]
 
         symbol_values_array = np.array(
@@ -115,12 +115,12 @@ class FidelityTest(tf.test.TestCase, parameterized.TestCase):
         """Tests that inner_product works without symbols."""
         qubits = cirq.LineQubit.range(n_qubits)
         circuit_batch, _ = \
-            util.random_circuit_resolver_batch(
+                util.random_circuit_resolver_batch(
                 qubits, batch_size)
 
         other_batch = [
             util.random_circuit_resolver_batch(qubits, inner_dim_size)[0]
-            for i in range(batch_size)
+            for _ in range(batch_size)
         ]
 
         programs = util.convert_to_tensor(circuit_batch)
@@ -186,10 +186,10 @@ class FidelityTest(tf.test.TestCase, parameterized.TestCase):
         n_params = len(symbol_names)
         qubits = cirq.GridQubit.rect(1, n_qubits)
         circuit_batch, resolver_batch = \
-            util.random_symbol_circuit_resolver_batch(
+                util.random_symbol_circuit_resolver_batch(
                 qubits, symbol_names, batch_size)
 
-        other_batch = [0 for i in range(batch_size)]
+        other_batch = [0 for _ in range(batch_size)]
         for i in range(len(other_batch)):
             other_batch[i] = copy.deepcopy(circuit_batch)
             for j in range(len(other_batch[i])):
@@ -257,12 +257,12 @@ class FidelityTest(tf.test.TestCase, parameterized.TestCase):
         """Tests that tf.gradient of inner_product works without symbols."""
         qubits = cirq.GridQubit.rect(1, n_qubits)
         circuit_batch, _ = \
-            util.random_circuit_resolver_batch(
+                util.random_circuit_resolver_batch(
                 qubits, batch_size)
 
         other_batch = [
             util.random_circuit_resolver_batch(qubits, inner_dim_size)[0]
-            for i in range(batch_size)
+            for _ in range(batch_size)
         ]
 
         programs = util.convert_to_tensor(circuit_batch)

@@ -187,7 +187,7 @@ class Sample(tf.keras.layers.Layer):
 
         # Ingest and promote repetitions.
         if isinstance(repetitions, numbers.Integral):
-            if not repetitions > 0:
+            if repetitions <= 0:
                 raise ValueError("Repetitions must be greater than zero.")
             repetitions = tf.convert_to_tensor([repetitions], dtype=tf.int32)
 

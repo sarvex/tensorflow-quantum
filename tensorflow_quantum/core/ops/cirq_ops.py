@@ -61,19 +61,20 @@ def _input_check_helper(programs, symbol_names, symbol_values):
             into the circuits specified by programs, following the ordering
             dictated by `symbol_names`.
     """
-    if not programs.dtype == tf.dtypes.string:
+    if programs.dtype != tf.dtypes.string:
         raise TypeError('programs tensor must be of type string')
     # if symbol_names is empty it won't be of type string
-    if tf.size(symbol_names) > 0 and not symbol_names.dtype == tf.dtypes.string:
+    if tf.size(symbol_names) > 0 and symbol_names.dtype != tf.dtypes.string:
         raise TypeError('symbol_names tensor must be of type string')
     if not isinstance(symbol_values.dtype.as_numpy_dtype(), numbers.Real):
         raise TypeError('symbol_values tensor must be a real-valued'
                         ' numeric tensor.')
-    if not (int(symbol_values.shape[0]) == int(tf.size(programs))):
+    if int(symbol_values.shape[0]) != int(tf.size(programs)):
         raise ValueError('first dimension of symbol_values tensor'
                          ' must match size of programs tensor.')
-    if len(symbol_values.shape) < 2 or not (int(tf.size(symbol_names)) == int(
-            symbol_values.shape[1])):
+    if len(symbol_values.shape) < 2 or int(tf.size(symbol_names)) != int(
+        symbol_values.shape[1]
+    ):
         raise ValueError('size of symbol_names tensor must match second'
                          ' dimension of symbol_values tensor.')
 
@@ -138,7 +139,7 @@ def _get_cirq_analytical_expectation(simulator=cirq.Simulator()):
     """
 
     def cirq_analytical_expectation(programs, symbol_names, symbol_values,
-                                    pauli_sums):
+                                        pauli_sums):
         """Calculate the expectation value of circuits wrt some operator(s).
 
         Calculate the expectation value for all the `cirq.PauliSum`s in
@@ -189,9 +190,9 @@ def _get_cirq_analytical_expectation(simulator=cirq.Simulator()):
                 (after resolving the corresponding parameters in).
         """
         _input_check_helper(programs, symbol_names, symbol_values)
-        if not (pauli_sums.dtype == tf.dtypes.string):
+        if pauli_sums.dtype != tf.dtypes.string:
             raise TypeError('pauli_sums tensor must be of type string.')
-        if not (pauli_sums.shape[0] == programs.shape[0]):
+        if pauli_sums.shape[0] != programs.shape[0]:
             raise TypeError('pauli_sums tensor must have the same batch shape '
                             'as programs tensor.')
 
@@ -252,7 +253,7 @@ def _get_cirq_sampled_expectation(sampler=cirq.Simulator()):
     """
 
     def cirq_sampled_expectation(programs, symbol_names, symbol_values,
-                                 pauli_sums, num_samples):
+                                     pauli_sums, num_samples):
         """Calculate the sampled expectation value of circuits wrt some
         operator(s).
 
@@ -309,18 +310,19 @@ def _get_cirq_sampled_expectation(sampler=cirq.Simulator()):
                 (after resolving the corresponding parameters in).
         """
         _input_check_helper(programs, symbol_names, symbol_values)
-        if not (pauli_sums.dtype == tf.dtypes.string):
+        if pauli_sums.dtype != tf.dtypes.string:
             raise TypeError('pauli_sums tensor must be of type string.')
-        if not (pauli_sums.shape[0] == programs.shape[0]) or \
-            len(pauli_sums.shape) != 2:
+        if (
+            pauli_sums.shape[0] != programs.shape[0]
+            or len(pauli_sums.shape) != 2
+        ):
             raise TypeError('pauli_sums tensor must have the same batch shape '
                             'as programs tensor.')
 
-        if not (num_samples.dtype == tf.dtypes.int32 or
-                num_samples.dtype == tf.dtypes.int64):
+        if num_samples.dtype not in [tf.dtypes.int32, tf.dtypes.int64]:
             raise TypeError('num_samples tensor must be of type int32 of '
                             'int64.')
-        if not (num_samples.shape == pauli_sums.shape):
+        if num_samples.shape != pauli_sums.shape:
             raise TypeError('num_samples tensor must have the same shape '
                             'as pauli_sums tensor. got: {} expected: {}'.format(
                                 num_samples.shape, pauli_sums.shape))
@@ -466,7 +468,7 @@ def _get_cirq_samples(sampler=cirq.Simulator()):
 
         _input_check_helper(programs, symbol_names, symbol_values)
 
-        if not (int(tf.size(num_samples)) == 1):
+        if int(tf.size(num_samples)) != 1:
             raise ValueError("num_samples tensor must have size 1")
         if not isinstance(num_samples.dtype.as_numpy_dtype(), numbers.Integral):
             raise TypeError("num_samples tensor must be of integer type")

@@ -52,9 +52,10 @@ class RandomCircuitBenchmarksTest(tf.test.TestCase, parameterized.TestCase):
     def testBenchmarkRandomCircuit(self, params):
         """Test that Op constructs and runs correctly."""
         proto_file_path = os.path.join(
-            SRC, "reports/",
-            "RandomCircuitBenchmarks.benchmark_random_circuit_{}_{}_{}".format(
-                params.n_rows, params.n_cols, params.n_moments))
+            SRC,
+            "reports/",
+            f"RandomCircuitBenchmarks.benchmark_random_circuit_{params.n_rows}_{params.n_cols}_{params.n_moments}",
+        )
         self.addCleanup(os.remove, proto_file_path)
 
         bench = RandomCircuitBenchmarks(params=params)
@@ -63,8 +64,8 @@ class RandomCircuitBenchmarksTest(tf.test.TestCase, parameterized.TestCase):
         res = benchmark_util.read_benchmark_entry(proto_file_path)
         self.assertEqual(
             res.name,
-            "RandomCircuitBenchmarks.benchmark_random_circuit_{}_{}_{}".format(
-                params.n_rows, params.n_cols, params.n_moments))
+            f"RandomCircuitBenchmarks.benchmark_random_circuit_{params.n_rows}_{params.n_cols}_{params.n_moments}",
+        )
         self.assertEqual(res.extras.get("n_rows").double_value, params.n_rows)
         self.assertEqual(res.extras.get("n_cols").double_value, params.n_cols)
         self.assertEqual(
@@ -128,10 +129,11 @@ class RandomCircuitBenchmarks(tf.test.Benchmark):
             "min_time": min(deltas),
         }
 
-        name = "benchmark_random_circuit_{}_{}_{}".format(
-            self.params.n_rows, self.params.n_cols, self.params.n_moments)
-        full_path = os.path.join(os.environ['TEST_REPORT_FILE_PREFIX'],
-                                 "{}.{}".format(self.__class__.__name__, name))
+        name = f"benchmark_random_circuit_{self.params.n_rows}_{self.params.n_cols}_{self.params.n_moments}"
+        full_path = os.path.join(
+            os.environ['TEST_REPORT_FILE_PREFIX'],
+            f"{self.__class__.__name__}.{name}",
+        )
         if os.path.exists(full_path):
             os.remove(full_path)
 

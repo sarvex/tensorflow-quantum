@@ -26,35 +26,50 @@ def _complex_test_circuit():
     t = sympy.Symbol('t')
     r = sympy.Symbol('r')
     qubits = cirq.GridQubit.rect(1, 6)
-    circuit_batch = [
+    return [
         cirq.Circuit(
             cirq.Moment([cirq.H(q) for q in qubits]),
-            cirq.Moment([
-                cirq.X(qubits[4]),
-                cirq.PhasedXPowGate(phase_exponent=np.random.random() * t).on(
-                    qubits[5]),
-                cirq.ISwapPowGate(exponent=np.random.random() * t).on(
-                    qubits[0], qubits[1]),
-                cirq.FSimGate(theta=np.random.random() * t,
-                              phi=np.random.random() * r).on(
-                                  qubits[2], qubits[3])
-            ]), cirq.Moment([cirq.H(q) for q in qubits])),
+            cirq.Moment(
+                [
+                    cirq.X(qubits[4]),
+                    cirq.PhasedXPowGate(
+                        phase_exponent=np.random.random() * t
+                    ).on(qubits[5]),
+                    cirq.ISwapPowGate(exponent=np.random.random() * t).on(
+                        qubits[0], qubits[1]
+                    ),
+                    cirq.FSimGate(
+                        theta=np.random.random() * t,
+                        phi=np.random.random() * r,
+                    ).on(qubits[2], qubits[3]),
+                ]
+            ),
+            cirq.Moment([cirq.H(q) for q in qubits]),
+        ),
         cirq.Circuit(
-            cirq.FSimGate(theta=np.random.random() * t,
-                          phi=np.random.random() * r).on(*qubits[:2]),
-            cirq.FSimGate(theta=np.random.random() * r,
-                          phi=np.random.random() * t).on(qubits[1], qubits[0])),
+            cirq.FSimGate(
+                theta=np.random.random() * t, phi=np.random.random() * r
+            ).on(*qubits[:2]),
+            cirq.FSimGate(
+                theta=np.random.random() * r, phi=np.random.random() * t
+            ).on(qubits[1], qubits[0]),
+        ),
         cirq.Circuit(
-            cirq.Moment([
-                cirq.ISwapPowGate(exponent=np.random.random() *
-                                  t).on(*qubits[:2]),
-                cirq.PhasedXPowGate(phase_exponent=np.random.random() * r).on(
-                    qubits[2]),
-                cirq.ISwapPowGate(exponent=np.random.random() *
-                                  r).on(*qubits[3:5])
-            ]))
+            cirq.Moment(
+                [
+                    cirq.ISwapPowGate(exponent=np.random.random() * t).on(
+                        *qubits[:2]
+                    ),
+                    cirq.PhasedXPowGate(
+                        phase_exponent=np.random.random() * r
+                    ).on(qubits[2]),
+                    cirq.ISwapPowGate(exponent=np.random.random() * r).on(
+                        *qubits[3:5]
+                    ),
+                ]
+            )
+        ),
     ]
-    return circuit_batch
 
 
 class PSDecomposeTest(tf.test.TestCase):
@@ -546,7 +561,7 @@ class PSSymbolReplaceTest(tf.test.TestCase):
         for i in range(3):
             for j in range(3):
                 for k in range(3):
-                    if i != j and (not (i == 2 and j == 0)):
+                    if i != j and (i != 2 or j != 0):
                         self.assertEqual(correct, output[i][j][k])
 
     def test_complex_pad(self):
@@ -655,8 +670,7 @@ class PSSymbolReplaceTest(tf.test.TestCase):
         for i in range(3):
             for j in range(3):
                 for k in range(3):
-                    if i != j and (not (i == 2 and j == 0)) \
-                        and (not (i == 1 and j == 0)):
+                    if i != j and (i != 2 or j != 0) and (i != 1 or j != 0):
                         self.assertEqual(correct, output[i][j][k])
 
 

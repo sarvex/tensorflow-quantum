@@ -60,11 +60,12 @@ def expand_circuits(inputs,
     # Ingest and promote symbol_names.
     if isinstance(symbol_names, (list, tuple)):
         if symbol_names and not all(
-            [isinstance(x, (str, sympy.Symbol)) for x in symbol_names]):
+            isinstance(x, (str, sympy.Symbol)) for x in symbol_names
+        ):
             raise TypeError("Each element in symbol_names"
                             " must be a string or sympy.Symbol.")
         symbol_names = [str(s) for s in symbol_names]
-        if not len(symbol_names) == len(list(set(symbol_names))):
+        if len(symbol_names) != len(list(set(symbol_names))):
             raise ValueError("All elements of symbol_names must be unique.")
         symbol_names = tf.convert_to_tensor(symbol_names,
                                             dtype=tf.dtypes.string)
